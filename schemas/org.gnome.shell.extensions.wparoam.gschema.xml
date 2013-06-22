@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemalist gettext-domain="gnome-shell-extensions-wparoam-daemon">
+  <schema path="/org/gnome/shell/extensions/wparoam/" id="org.gnome.shell.extensions.wparoam">
+    <key type="s" name="wifi-configurator-app">
+        <default>"/usr/sbin/wpa_gui"</default>
+        <summary>Wifi Configuration Application</summary>
+        <description>This is the program that will be launched if launch-on-click is enabled.</description>
+    </key>
+    <key type="b" name="launch-on-click">
+        <default>true</default>
+        <summary>Launch configurator on click</summary>
+        <description>Enables launching of a custom wifi-configuration application when the panel icon is clicked.</description>
+    </key>
+  </schema>
+</schemalist>
+

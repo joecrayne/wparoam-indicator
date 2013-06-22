@@ -1,0 +1,57 @@
+Remove gschemas.compiled from debian source package.
+[23:52] <twb> FWIW you're using  -*- js2 -*- inconsistently between source files
+[23:53] <twb> I guess because lib.js is a convenience copy of someone else's stuff
+[23:53] <orzo> oh yes it is, it came from an extension called caffein
+[23:53] <twb> It should be mentioned in debian/copyright then.  Also debhelper.log should also not be in git
+[23:53] <twb> http://cyber.com.au/~twb/.gitignore.global
+
+[23:55] <orzo> I consider it as behaving
+[23:55] <twb> Oh substvars is also not for git
+[23:55] <orzo> if wpa-roam is not setup, it will show an error icon in the panel, if you click that icon, it will display a diagnostic 
+               message
+[23:56] <twb> You have an undeclared build-time dependency on gjs
+
+[23:58] <twb> You should not have a -1 since it's a native package
+
+[00:00] <twb> orzo: hi
+[00:00] <orzo> the reboot interval when wpa-roam is not configured is every 10 seconds
+[00:00] <orzo> hi
+[00:03] <twb> the gjs line is a bit confusing
+[00:04] <orzo> in the Makefile?
+[00:04] <twb> Yeah
+[00:04] <orzo> It's just parsing the string "wparoam@wordslurp.com" out of metadata.json
+[00:04] <twb> I also personally would use GNUmakefile to indicate you're using GNUisms (I think foreach is), and I would list each file 
+              explicitly rather than using the foreach.
+[00:05] <twb> orzo: and then passing that to gjc?
+[00:05] <twb> Er, gjs
+[00:05] <orzo> oh no, i'm usin gjs to parse the json and print one value from the map
+[00:06] <orzo> the sed transforms the json into javascript code that does that
+[00:06] <orzo> heh
+
+[00:09] <twb> Also if you wanted you could use a debian/install file instead of the makefile, although you'd have to bake in the UUID
+[00:09] <twb> It would look something like *.json *.js /usr/share/gnome-shell/extensions/foo@bar/
+[00:11] <orzo> Hm
+[00:11] <twb> I *think* you could also do globbing with install, but I'm not 100% sure
+
+[00:13] <orzo> zip-file generation is useful as I may be submitting to extensions.gnome.org
+[00:13] <twb> But I would be more inclined to make it non-native and maintain debian/ in a separate branch and do the installing in a 
+              makefile
+[00:13] <twb> for zip file, you can use git archive
+[00:13] <twb> I'm assuming that you're using git :-)
+[00:14] <twb> git archive "$tag" . > "$PWD"_"$tag".zip
+[00:14] <orzo> I don't think the debian/ directory should go in the zip
+[00:15] <orzo> zip isn't really a source archive, its an install medium for .local/share/gnome-shell/extensions/
+[00:15] <orzo> in your home directory
+[00:15] --- k-man [~Jason@ppp167-253-181.static.internode.on.net] has joined #debian-mentors
+[00:15] <twb> Yeah normally debian/ would be in a separate branch
+[00:15] <orzo> oh
+[00:15] <twb> At least if you're using git buildpackage
+[00:16] <orzo> i don't have this in git atm
+[00:16] <orzo> but i dont know why i don't
+[00:16] <orzo> i usually throw everything in git
+[00:16] <twb> Also instead of . you could pass all the top-level files that aren't debian/, but IMO that's a bit silly
+[00:17] <twb> Once you debuild, you should definitely run lintian on the .changes file to see things to improve
+[00:17] <orzo> also, the zip should probably contain a locale directory that I didn't put in the source tree
+[00:18] <orzo> though i don't have nay translations, that locale directory is important for auto-detecting whether the extension is 
+               installed in the user's home or system-wide
+

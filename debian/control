@@ -1,0 +1,19 @@
+Source: wparoam-indicator
+Section: net
+Priority: optional
+Maintainer: Joe Crayne <oh.hello.joe@gmail.com>
+Build-Depends: debhelper (>= 7.0.50~)
+Standards-Version: 3.8.4
+Homepage: http://www.wordslurp.com/wparoam-indicator/
+
+Package: wparoam-indicator
+Architecture: all
+Recommends: ifupdown, wpagui
+Depends: wpasupplicant, libglib2.0-bin, ${misc:Depends},
+         gnome-shell (>= 3.4),
+         gnome-shell (<< 3.5)
+Description: Gnome interface for wpa-supplicant's wpa-roam mode.
+ Gnome-shell extension for indicating the status of a wifi connection.
+ This interface is designed to interoperate with wpa_cli, wpa_gui and
+ ifupdown.
+ 
