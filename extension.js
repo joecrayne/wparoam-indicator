@@ -13,6 +13,11 @@ const Wpasup = Me.imports.wpasup;
 const Lib = Me.imports.lib;
 
 
+function chomp(raw_text)
+{
+    return raw_text.replace(/(\n|\r)+$/, '');
+}
+
 // global.log( msg )
 // global.logError( msg )
 
@@ -32,57 +37,44 @@ GnomeUi.prototype = {
                                 });
 
         this._signals = new Array(5);
+
+        /*
+        if(typeof St.IconType != "undefined") {
+        }
+        */
+
         this._signals[0] = new St.Icon({ 
                                  // icon_name: 'system-run',
                                  icon_name: 'network-wireless-signal-none-symbolic',
-                                 icon_type: St.IconType.SYMBOLIC,
+                                 // icon_type: St.IconType.SYMBOLIC,
                                  style_class: 'system-status-icon' });
         this._signals[1] = new St.Icon({ 
                                  // icon_name: 'system-run',
                                  icon_name: 'network-wireless-signal-weak-symbolic',
-                                 icon_type: St.IconType.SYMBOLIC,
+                                 // icon_type: St.IconType.SYMBOLIC,
                                  style_class: 'system-status-icon' });
         this._signals[2] = new St.Icon({ 
                                  // icon_name: 'system-run',
                                  icon_name: 'network-wireless-signal-ok-symbolic',
-                                 icon_type: St.IconType.SYMBOLIC,
+                                 // icon_type: St.IconType.SYMBOLIC,
                                  style_class: 'system-status-icon' });
         this._signals[3] = new St.Icon({ 
                                  // icon_name: 'system-run',
                                  icon_name: 'network-wireless-signal-good-symbolic',
-                                 icon_type: St.IconType.SYMBOLIC,
+                                 // icon_type: St.IconType.SYMBOLIC,
                                  style_class: 'system-status-icon' });
         this._signals[4] = new St.Icon({ 
                                  // icon_name: 'system-run',
                                  icon_name: 'network-wireless-signal-excellent-symbolic',
-                                 icon_type: St.IconType.SYMBOLIC,
+                                 // icon_type: St.IconType.SYMBOLIC,
                                  style_class: 'system-status-icon' });
         this._error_icon = new St.Icon({ 
                                  // icon_name: 'system-run',
                                  icon_name: 'network-error-symbolic',
-                                 icon_type: St.IconType.SYMBOLIC,
+                                 // icon_type: St.IconType.SYMBOLIC,
                                  style_class: 'system-status-icon' });
-        this._errors = {}
-        this._error_box = new ModalDialog.ModalDialog({});
-        let hbox = new St.BoxLayout({ style: "padding: 10px; spacing: 10px"});
-        this._error_lbl = new St.Label({text: "error"});
-        this._error_box_icon = new St.Icon({ 
-                                 // icon_name: 'system-run',
-                                 icon_name: 'network-error-symbolic',
-                                 icon_size: 96,
-                                 icon_type: St.IconType.SYMBOLIC,
-                                 style_class: 'system-status-icon' });
-        hbox.add( this._error_box_icon, { padding: 10, x_align: St.Align.MIDDLE } );
-        hbox.add( this._error_lbl, { x_fill: true, x_expand: true} );
-        this._error_box.contentLayout.add(hbox);
-        this._error_box.setButtons( [
-                {
-                    label: "Close",
-                    key: Clutter.KEY_Escape,
-                    action: Lang.bind(this._error_box, this._error_box.close)
-                }
-            ] );
-
+        this._errors = {};
+        this.build_error_diaolg();
         /*
         this._cicon = new St.Icon({ 
                                  // icon_name: 'system-run',
@@ -112,12 +104,38 @@ GnomeUi.prototype = {
         this._current_icon = icon;
     },
 
+    build_error_diaolg: function(icon) {
+        this._error_box = new ModalDialog.ModalDialog({});
+        let hbox = new St.BoxLayout({ style: "padding: 10px; spacing: 10px"});
+        this._error_lbl = new St.Label({text: "error"});
+        this._error_box_icon = new St.Icon({ 
+                                 // icon_name: 'system-run',
+                                 icon_name: 'network-error-symbolic',
+                                 icon_size: 96,
+                                 // icon_type: St.IconType.SYMBOLIC,
+                                 style_class: 'system-status-icon' });
+        hbox.add( this._error_box_icon, { padding: 10, x_align: St.Align.MIDDLE } );
+        hbox.add( this._error_lbl, { x_fill: true, x_expand: true} );
+        this._error_box.contentLayout.add(hbox);
+        this._error_box.setButtons( [
+                {
+                    label: "Close",
+                    key: Clutter.KEY_Escape,
+                    action: Lang.bind(this._error_box, this._error_box.close)
+                }
+            ] );
+    },
+
     _onClick: function(actor, e) {
         let errmsg = Object.keys(this._errors).join("\n");
-        if( errmsg != "" ) {
+        if( chomp(errmsg) != "" ) {
             global.log("Errors(on-click):\n"+errmsg);
             this._error_lbl.set_text(errmsg);
             this._error_box.open(e.get_time());
+            // Rebuilding _error_box in gambit to avoid UI crash...
+
+            this.build_error_diaolg();
+
             /*
             this._err_dialog = new Gtk.MessageDialog({
                 modal: true,
