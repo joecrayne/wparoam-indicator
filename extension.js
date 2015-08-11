@@ -2,6 +2,7 @@ const St = imports.gi.St;
 const Main = imports.ui.main;
 const Tweener = imports.ui.tweener;
 const Panel = imports.ui.panel;
+const Animation = imports.ui.animation;
 const ModalDialog = imports.ui.modalDialog;
 const Clutter = imports.gi.Clutter;
 
@@ -84,7 +85,7 @@ GnomeUi.prototype = {
         */
         //let pwpath = '/usr/share/icons/gnome/48x48/animations/process-working.png';
         let pwpath = "process-working.svg";
-        this._spinner = new Panel.AnimatedIcon(pwpath, 24);//PANEL_ICON_SIZE);
+        this._spinner = new Animation.AnimatedIcon(pwpath, 24);//PANEL_ICON_SIZE);
         // tprint("nchildren = "+this._spinner._animations.get_n_children()+"  datadir="+global.datadir+"  _frame = "+this._spinner._frame);
         //icon.opacity = 0;
         // icon.show();

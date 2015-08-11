@@ -133,7 +133,7 @@ WpaSup.prototype = {
     connect: function() {
         let bErr = false;
         try {
-            let la = new Gio.UnixSocketAddress.new(this.localSocketFile);
+            let la = Gio.UnixSocketAddress.new(this.localSocketFile);
             let ifaces = Wpaproc.wpasup_state();
             let con_errors = [];
             this.con = null;
@@ -141,7 +141,7 @@ WpaSup.prototype = {
                 let wpasup = ifaces[i];
                 try {
                     // dlog("Trying interface "+wpasup.iface+" at "+wpasup.path_to_socket);
-                    let a = new Gio.UnixSocketAddress.new(wpasup.path_to_socket);
+                    let a = Gio.UnixSocketAddress.new(wpasup.path_to_socket);
                     this.client.set_local_address(la);
                     GLib.unlink(this.localSocketFile);
                     this.con = this.client.connect(a,null);
@@ -167,7 +167,7 @@ WpaSup.prototype = {
                 }
             }
             // dlog("connected "+this.con+" con_errors="+con_errors);
-            this.outs = new Gio.DataOutputStream.new( this.con.get_output_stream() );
+            this.outs = Gio.DataOutputStream.new( this.con.get_output_stream() );
             let fd = this.con.get_socket().get_fd();
             this.ioc = GLib.IOChannel.unix_new( fd );
             // print ("connect this="+this);
