@@ -6,6 +6,7 @@ const Animation = imports.ui.animation;
 const ModalDialog = imports.ui.modalDialog;
 const Clutter = imports.gi.Clutter;
 
+const Gio = imports.gi.Gio;
 const GLib = imports.gi.GLib;
 const Lang = imports.lang;
 const Mainloop = imports.mainloop;
@@ -85,7 +86,14 @@ GnomeUi.prototype = {
         */
         //let pwpath = '/usr/share/icons/gnome/48x48/animations/process-working.png';
         let pwpath = "process-working.svg";
-        this._spinner = new Animation.AnimatedIcon(pwpath, 24);//PANEL_ICON_SIZE);
+        try {
+            // 3.14
+            this._spinner = new Animation.AnimatedIcon(pwpath, 24);//PANEL_ICON_SIZE);
+        }
+        catch(e) {
+            // 3.16
+            this._spinner = new Animation.AnimatedIcon(Gio.file_new_for_path(pwpath), 24);//PANEL_ICON_SIZE);
+        }
         // tprint("nchildren = "+this._spinner._animations.get_n_children()+"  datadir="+global.datadir+"  _frame = "+this._spinner._frame);
         //icon.opacity = 0;
         // icon.show();

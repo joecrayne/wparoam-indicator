@@ -1,5 +1,6 @@
 {"shell-version": [
-	"3.14"
+	"3.14",
+	"3.16"
 	]
 , "uuid": "wparoam@wordslurp.com"
 , "name": "Wpa-roam Indicator"
